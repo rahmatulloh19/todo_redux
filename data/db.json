@@ -1,4 +1,26 @@
 {
-  "users": [],
+  "users": [
+    {
+      "email": "ada@adad",
+      "password": "$2a$10$os8YTs7cCHfzLTXs4xcl8ejxsN6Ahv7wKz.0Rmr4ViBhdVG2O6sje",
+      "first_name": "aa",
+      "last_name": "aa",
+      "id": 1
+    },
+    {
+      "email": "raxmonov@gmail.com",
+      "password": "$2a$10$qOggGqZtjbVNeE9bn4cdB.Zm1ybP7UNyM2Xxo8r.3xoO/DL.CqvcO",
+      "first_name": "Rahmatulloh",
+      "last_name": "Raxmonov",
+      "id": 2
+    },
+    {
+      "email": "Raxmonov@gmail.com",
+      "password": "$2a$10$EONe5KPfClYOWTfUYsekIOpTpPXUYXtQvBj94ZXDgCWzzPodxKZBi",
+      "first_name": "Rahmatulloh",
+      "last_name": "Raxmonov",
+      "id": 3
+    }
+  ],
   "todo": []
 }

@@ -1,7 +1,11 @@
 import { useRef } from "react";
 import "./register.css";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { setToken } from "../../redux/token/tokenAction";
 
 export const Register = () => {
+  const dispatch = useDispatch();
   const firstName = useRef();
   const lastName = useRef();
   const email = useRef();
@@ -10,12 +14,23 @@ export const Register = () => {
   const handleSubmit = (evt) => {
     evt.preventDefault();
 
-    console.log({
-      first_name: firstName.current.value,
-      last_name: lastName.current.value,
-      email: email.current.value,
-      password: password.current.value,
-    });
+    axios
+      .post("http://localhost:3000/register", {
+        first_name: firstName.current.value,
+        last_name: lastName.current.value,
+        email: email.current.value,
+        password: password.current.value,
+      })
+      .then((res) => {
+        if (res.status === 201) {
+          localStorage.setItem("token", res.data.accessToken);
+          localStorage.setItem("me", JSON.stringify(res.data.user));
+          dispatch(setToken(res.data.accessToken));
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (

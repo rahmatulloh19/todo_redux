@@ -1,16 +1,15 @@
 import { useRef } from "react";
-import "./register.css";
+import "../Register/register.css";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setToken } from "../../redux/token/tokenAction";
 import { useNavigate } from "react-router-dom";
+import { setUser } from "../../redux/user/userAction";
 
-export const Register = () => {
+export const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const firstName = useRef();
-  const lastName = useRef();
   const email = useRef();
   const password = useRef();
 
@@ -18,17 +17,16 @@ export const Register = () => {
     evt.preventDefault();
 
     axios
-      .post("http://localhost:3000/register", {
-        first_name: firstName.current.value,
-        last_name: lastName.current.value,
+      .post("http://localhost:3000/login", {
         email: email.current.value,
         password: password.current.value,
       })
       .then((res) => {
-        if (res.status === 201) {
+        if (res.status === 200) {
           localStorage.setItem("token", res.data.accessToken);
           localStorage.setItem("me", JSON.stringify(res.data.user));
           dispatch(setToken(res.data.accessToken));
+          dispatch(setUser(res.data.user));
           navigate("/");
         }
       })
@@ -39,15 +37,7 @@ export const Register = () => {
 
   return (
     <form className="w-50 mx-auto d-flex flex-column gap-2" onSubmit={handleSubmit}>
-      <h1 className="h3 mb-3 fw-normal">Please register</h1>
-      <div className="form-floating">
-        <input type="text" className="form-control" id="floatingInput" placeholder="Last Name" name="first_name" ref={firstName} />
-        <label htmlFor="floatingInput">First Name</label>
-      </div>
-      <div className="form-floating">
-        <input type="text" className="form-control" id="floatingInput" placeholder="First Name" name="last_name" ref={lastName} />
-        <label htmlFor="floatingInput">Last Name</label>
-      </div>
+      <h1 className="h3 mb-3 fw-normal">Please Login</h1>
       <div className="form-floating">
         <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" name="email" ref={email} />
         <label htmlFor="floatingInput">Email address</label>

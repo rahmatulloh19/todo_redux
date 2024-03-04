@@ -6,13 +6,18 @@ import { Todo } from "./pages/Todo/Todo";
 import { useDispatch } from "react-redux";
 import { setToken } from "./redux/token/tokenAction";
 import { setUser } from "./redux/user/userAction";
+import { useLayoutEffect } from "react";
 
 function App() {
-  const token = localStorage.getItem("token");
+  console.log("rerendered");
   const dispatch = useDispatch();
 
-  dispatch(setToken(localStorage.getItem("token")));
-  dispatch(setUser(JSON.parse(localStorage.getItem("me"))));
+  const token = localStorage.getItem("token");
+
+  useLayoutEffect(() => {
+    dispatch(setToken(localStorage.getItem("token")));
+    dispatch(setUser(JSON.parse(localStorage.getItem("me"))));
+  }, []);
 
   if (token) {
     return <Todo />;

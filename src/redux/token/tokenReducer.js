@@ -1,4 +1,4 @@
-import { SET_TOKEN } from "./tokenType";
+import { CLEAR_TOKEN, SET_TOKEN } from "./tokenType";
 
 const initialState = {
   incomingToken: "",
@@ -10,6 +10,11 @@ export const tokenReducer = (state = initialState, action) => {
       return {
         ...state,
         incomingToken: action.payload,
+      };
+    case CLEAR_TOKEN:
+      return {
+        ...state,
+        incomingToken: "",
       };
     default:
       return state;

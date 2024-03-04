@@ -1,4 +1,4 @@
-import { SET_USER } from "./userType";
+import { CLEAR_USER, SET_USER } from "./userType";
 
 const initialState = {
   user: {},
@@ -9,6 +9,10 @@ export const userReducer = (state = initialState, action) => {
     case SET_USER:
       return {
         user: action.payload,
+      };
+    case CLEAR_USER:
+      return {
+        user: "",
       };
     default:
       return state;

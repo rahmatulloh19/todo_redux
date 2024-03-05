@@ -4,17 +4,16 @@ import { clearToken } from "../../redux/token/tokenAction";
 import { clearUser } from "../../redux/user/userAction";
 import { useNavigate } from "react-router-dom";
 import { instance } from "../../axios";
-import { editTodo, getSingleTodo, getTodo, postTodo } from "../../redux/todo/todoActions";
+import { deleteTodo, editTodo, getSingleTodo, getTodo, postTodo } from "../../redux/todo/todoActions";
 import { Modal } from "../../components/Modal/Modal";
+import { DeleteModal } from "../../components/DeleteModal/DeleteModal";
 
 export const Todo = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const todo = useSelector((state) => state.todoReducer.todo) || [];
+  const todo = useSelector((state) => state.todoReducer.todo);
   const todoOnModal = useSelector((state) => state.todoReducer.editingTodo);
-
-  console.log(todo);
 
   const todoRef = useRef();
   const descRef = useRef();
@@ -52,6 +51,19 @@ export const Todo = () => {
       .then((res) => {
         dispatch(editTodo(res.data));
         console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const handleSubmitDelete = (evt) => {
+    evt.preventDefault();
+
+    instance
+      .delete("todo/" + todoOnModal.id)
+      .then(() => {
+        dispatch(deleteTodo(todoOnModal.id));
       })
       .catch((err) => {
         console.log(err);
@@ -117,14 +129,10 @@ export const Todo = () => {
                     <button
                       className="btn btn-danger"
                       type="button"
+                      data-bs-toggle="modal"
+                      data-bs-target="#deleteModal"
                       onClick={() => {
-                        // dispatch(
-                        //   postTodo({
-                        //     id: mission.id,
-                        //     todo: mission.todo,
-                        //     todo_desc: mission.todo_desc,
-                        //   })
-                        // );
+                        dispatch(getSingleTodo(mission.id));
                       }}
                     >
                       Delete
@@ -137,14 +145,27 @@ export const Todo = () => {
       </table>
 
       <Modal modalTitle={`Editing Todo with Id: ${todoOnModal.id ? todoOnModal.id : ""}`}>
-        <form className="d-flex flex-column gap-3 w-75 mx-auto my-5" onSubmit={handleSubmitEdit}>
+        <form className="d-flex flex-column gap-3" onSubmit={handleSubmitEdit}>
           <input className="form-control" type="text" ref={todoEditRef} name="todo" placeholder="Enter todo... " defaultValue={todoOnModal.id ? todoOnModal.todo : ""} />
           <textarea className="form-control " ref={descEditRef} name="todo_desc" placeholder="Enter todo description... " defaultValue={todoOnModal.id ? todoOnModal.desc : ""}></textarea>
-          <button className="btn btn-success" type="submit">
+          <button className="btn btn-success" data-bs-toggle="modal" type="submit">
             Edit
           </button>
         </form>
       </Modal>
+
+      <DeleteModal modalTitle={`Deleting Todo with Id: ${todoOnModal.id ? todoOnModal.id : ""}`}>
+        <form className="d-flex flex-column gap-3" onSubmit={handleSubmitDelete}>
+          <div className="d-flex gap-3 justify-content-end">
+            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+              Close Window
+            </button>
+            <button className="btn btn-danger" data-bs-toggle="modal" type="submit">
+              DELETE
+            </button>
+          </div>
+        </form>
+      </DeleteModal>
     </div>
   );
 };

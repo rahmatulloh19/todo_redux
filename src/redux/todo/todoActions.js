@@ -1,4 +1,4 @@
-import { EDIT_TODO, GET_SINGLE_TODO, GET_TODO, POST_TODO } from "./todoTypes";
+import { DELETE_TODO, EDIT_TODO, GET_SINGLE_TODO, GET_TODO, POST_TODO } from "./todoTypes";
 
 export const getTodo = (todo) => {
   return {
@@ -6,10 +6,11 @@ export const getTodo = (todo) => {
     payload: todo,
   };
 };
-export const getSingleTodo = (todo) => {
+
+export const getSingleTodo = (todoId) => {
   return {
     type: GET_SINGLE_TODO,
-    payload: todo,
+    payload: todoId,
   };
 };
 
@@ -20,10 +21,10 @@ export const postTodo = (postedTodo) => {
   };
 };
 
-export const deleteTodo = () => {
+export const deleteTodo = (todoId) => {
   return {
-    type: POST_TODO,
-    payload: "",
+    type: DELETE_TODO,
+    payload: todoId,
   };
 };
 

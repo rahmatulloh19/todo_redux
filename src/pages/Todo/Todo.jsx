@@ -4,16 +4,23 @@ import { clearToken } from "../../redux/token/tokenAction";
 import { clearUser } from "../../redux/user/userAction";
 import { useNavigate } from "react-router-dom";
 import { instance } from "../../axios";
-import { getTodo, postTodo } from "../../redux/todo/todoActions";
+import { editTodo, getSingleTodo, getTodo, postTodo } from "../../redux/todo/todoActions";
+import { Modal } from "../../components/Modal/Modal";
 
 export const Todo = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const todo = useSelector((state) => state.todoReducer.todo);
+  const todo = useSelector((state) => state.todoReducer.todo) || [];
+  const todoOnModal = useSelector((state) => state.todoReducer.editingTodo);
+
+  console.log(todo);
 
   const todoRef = useRef();
   const descRef = useRef();
+
+  const todoEditRef = useRef();
+  const descEditRef = useRef();
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
@@ -29,12 +36,31 @@ export const Todo = () => {
       .catch((err) => {
         console.log(err);
       });
+
+    todoRef.current.value = "";
+    descRef.current.value = "";
+  };
+
+  const handleSubmitEdit = (evt) => {
+    evt.preventDefault();
+
+    instance
+      .put("todo/" + todoOnModal.id, {
+        todo: todoEditRef.current.value.trim(),
+        desc: descEditRef.current.value.trim(),
+      })
+      .then((res) => {
+        dispatch(editTodo(res.data));
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   useLayoutEffect(() => {
     instance("/todo").then((res) => {
       dispatch(getTodo(res.data));
-      console.log(res.data);
     });
   }, [dispatch]);
 
@@ -80,14 +106,10 @@ export const Todo = () => {
                     <button
                       className="btn btn-primary me-3"
                       type="button"
+                      data-bs-toggle="modal"
+                      data-bs-target="#exampleModal"
                       onClick={() => {
-                        // dispatch(
-                        //   postTodo({
-                        //     id: mission.id,
-                        //     todo: mission.todo,
-                        //     todo_desc: mission.todo_desc,
-                        //   })
-                        // );
+                        dispatch(getSingleTodo(mission.id));
                       }}
                     >
                       Edit
@@ -113,6 +135,16 @@ export const Todo = () => {
             })}
         </tbody>
       </table>
+
+      <Modal modalTitle={`Editing Todo with Id: ${todoOnModal.id ? todoOnModal.id : ""}`}>
+        <form className="d-flex flex-column gap-3 w-75 mx-auto my-5" onSubmit={handleSubmitEdit}>
+          <input className="form-control" type="text" ref={todoEditRef} name="todo" placeholder="Enter todo... " defaultValue={todoOnModal.id ? todoOnModal.todo : ""} />
+          <textarea className="form-control " ref={descEditRef} name="todo_desc" placeholder="Enter todo description... " defaultValue={todoOnModal.id ? todoOnModal.desc : ""}></textarea>
+          <button className="btn btn-success" type="submit">
+            Edit
+          </button>
+        </form>
+      </Modal>
     </div>
   );
 };

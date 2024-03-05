@@ -25,18 +25,28 @@
   "todo": [
     {
       "todo": "Hello world",
-      "desc": "First commiting",
+      "desc": "Initial commit",
       "id": 1
     },
     {
       "todo": "Reading book",
-      "desc": "every day reading some 2 paper",
+      "desc": "Every day reading some 2 paper",
       "id": 2
     },
     {
       "todo": "Coding",
       "desc": "Learn some new about coding",
       "id": 3
+    },
+    {
+      "todo": "Finish Portfolio site",
+      "desc": "Finishing my own portfolio site",
+      "id": 4
+    },
+    {
+      "todo": "Add some todo",
+      "desc": "Hello world",
+      "id": 5
     }
   ]
 }

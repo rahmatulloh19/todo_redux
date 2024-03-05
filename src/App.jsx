@@ -1,4 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.min.js";
 import { Register } from "./pages/Register/Register";
 import { Route, Routes } from "react-router-dom";
 import { Login } from "./pages/Login/Login";

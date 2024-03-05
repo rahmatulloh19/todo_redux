@@ -1,8 +1,14 @@
-import { EDIT_TODO, GET_TODO, POST_TODO } from "./todoTypes";
+import { EDIT_TODO, GET_SINGLE_TODO, GET_TODO, POST_TODO } from "./todoTypes";
 
 export const getTodo = (todo) => {
   return {
     type: GET_TODO,
+    payload: todo,
+  };
+};
+export const getSingleTodo = (todo) => {
+  return {
+    type: GET_SINGLE_TODO,
     payload: todo,
   };
 };

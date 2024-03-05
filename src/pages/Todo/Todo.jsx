@@ -1,13 +1,16 @@
-import axios from "axios";
-import { useRef } from "react";
-import { useDispatch } from "react-redux";
+import { useLayoutEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { clearToken } from "../../redux/token/tokenAction";
 import { clearUser } from "../../redux/user/userAction";
 import { useNavigate } from "react-router-dom";
+import { instance } from "../../axios";
+import { getTodo, postTodo } from "../../redux/todo/todoActions";
 
 export const Todo = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const todo = useSelector((state) => state.todoReducer.todo);
 
   const todoRef = useRef();
   const descRef = useRef();
@@ -15,18 +18,25 @@ export const Todo = () => {
   const handleSubmit = (evt) => {
     evt.preventDefault();
 
-    axios
-      .post("http://localhost:3000/todo/", {
+    instance
+      .post("todo/", {
         todo: todoRef.current.value.trim(),
         desc: descRef.current.value.trim(),
       })
       .then((res) => {
-        console.log(res);
+        dispatch(postTodo(res.data));
       })
       .catch((err) => {
         console.log(err);
       });
   };
+
+  useLayoutEffect(() => {
+    instance("/todo").then((res) => {
+      dispatch(getTodo(res.data));
+      console.log(res.data);
+    });
+  }, [dispatch]);
 
   const logOutFunc = () => {
     localStorage.removeItem("me");
@@ -35,8 +45,6 @@ export const Todo = () => {
     dispatch(clearUser());
     navigate("/");
   };
-
-  console.log([].concat({}).concat({}).concat({}).concat({}).concat({}));
 
   return (
     <div className="container">
@@ -56,50 +64,53 @@ export const Todo = () => {
           <tr>
             <th scope="col">ID</th>
             <th scope="col">Name</th>
-            <th scope="col">Desc</th>
+            <th scope="col">Description</th>
             <th scope="col">Actions</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <th scope="row">1</th>
-            <td>Yugurish</td>
-            <td>ertalab turib yugurish</td>
-            <td>
-              <button className="btn btn-danger me-2" type="button">
-                Delete
-              </button>
-              <button className="btn btn-warning" type="button">
-                Edit
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <th scope="row">1</th>
-            <td>Yugurish</td>
-            <td>ertalab turib yugurish</td>
-            <td>
-              <button className="btn btn-danger me-2" type="button">
-                Delete
-              </button>
-              <button className="btn btn-warning" type="button">
-                Edit
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <th scope="row">1</th>
-            <td>Yugurish</td>
-            <td>ertalab turib yugurish</td>
-            <td>
-              <button className="btn btn-danger me-2" type="button">
-                Delete
-              </button>
-              <button className="btn btn-warning" type="button">
-                Edit
-              </button>
-            </td>
-          </tr>
+          {todo &&
+            todo.map((mission) => {
+              return (
+                <tr key={mission.id}>
+                  <th scope="row">{mission.id}</th>
+                  <td>{mission.todo}</td>
+                  <td>{mission.desc}</td>
+                  <td>
+                    <button
+                      className="btn btn-primary me-3"
+                      type="button"
+                      onClick={() => {
+                        // dispatch(
+                        //   postTodo({
+                        //     id: mission.id,
+                        //     todo: mission.todo,
+                        //     todo_desc: mission.todo_desc,
+                        //   })
+                        // );
+                      }}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className="btn btn-danger"
+                      type="button"
+                      onClick={() => {
+                        // dispatch(
+                        //   postTodo({
+                        //     id: mission.id,
+                        //     todo: mission.todo,
+                        //     todo_desc: mission.todo_desc,
+                        //   })
+                        // );
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
         </tbody>
       </table>
     </div>

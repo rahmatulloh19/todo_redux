@@ -22,5 +22,21 @@
       "id": 3
     }
   ],
-  "todo": []
+  "todo": [
+    {
+      "todo": "Hello world",
+      "desc": "First commiting",
+      "id": 1
+    },
+    {
+      "todo": "Reading book",
+      "desc": "every day reading some 2 paper",
+      "id": 2
+    },
+    {
+      "todo": "Coding",
+      "desc": "Learn some new about coding",
+      "id": 3
+    }
+  ]
 }

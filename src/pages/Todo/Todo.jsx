@@ -36,6 +36,8 @@ export const Todo = () => {
     navigate("/");
   };
 
+  console.log([].concat({}).concat({}).concat({}).concat({}).concat({}));
+
   return (
     <div className="container">
       <h1 className="text-center fs-1">Todo</h1>

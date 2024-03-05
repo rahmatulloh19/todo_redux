@@ -15,7 +15,7 @@ function App() {
   useLayoutEffect(() => {
     dispatch(setToken(localStorage.getItem("token")));
     dispatch(setUser(JSON.parse(localStorage.getItem("me"))));
-  }, [token]);
+  }, [dispatch]);
 
   if (token) {
     return <Todo />;

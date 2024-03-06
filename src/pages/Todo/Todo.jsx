@@ -4,7 +4,7 @@ import { clearToken } from "../../redux/token/tokenAction";
 import { clearUser } from "../../redux/user/userAction";
 import { useNavigate } from "react-router-dom";
 import { instance } from "../../axios";
-import { deleteTodo, editTodo, getSingleTodo, getTodo, postTodo } from "../../redux/todo/todoActions";
+import { getSingleTodo, getTodo } from "../../redux/todo/todoActions";
 import { Modal } from "../../components/Modal/Modal";
 import { DeleteModal } from "../../components/DeleteModal/DeleteModal";
 
@@ -29,8 +29,8 @@ export const Todo = () => {
         todo: todoRef.current.value.trim(),
         desc: descRef.current.value.trim(),
       })
-      .then((res) => {
-        dispatch(postTodo(res.data));
+      .then(() => {
+        setTodo();
       })
       .catch((err) => {
         console.log(err);
@@ -48,9 +48,8 @@ export const Todo = () => {
         todo: todoEditRef.current.value.trim(),
         desc: descEditRef.current.value.trim(),
       })
-      .then((res) => {
-        dispatch(editTodo(res.data));
-        console.log(res.data);
+      .then(() => {
+        setTodo();
       })
       .catch((err) => {
         console.log(err);
@@ -63,18 +62,26 @@ export const Todo = () => {
     instance
       .delete("todo/" + todoOnModal.id)
       .then(() => {
-        dispatch(deleteTodo(todoOnModal.id));
+        setTodo();
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
-  useLayoutEffect(() => {
-    instance("/todo").then((res) => {
+  const setTodo = async () => {
+    try {
+      const res = await instance.get("todo/");
+      console.log(res);
       dispatch(getTodo(res.data));
-    });
-  }, [dispatch]);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useLayoutEffect(() => {
+    setTodo();
+  }, []);
 
   const logOutFunc = () => {
     localStorage.removeItem("me");
@@ -114,7 +121,7 @@ export const Todo = () => {
                   <th scope="row">{mission.id}</th>
                   <td>{mission.todo}</td>
                   <td>{mission.desc}</td>
-                  <td>
+                  <td style={{ display: "flex", gap: 3 }}>
                     <button
                       className="btn btn-primary me-3"
                       type="button"

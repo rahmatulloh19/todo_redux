@@ -72,7 +72,6 @@ export const Todo = () => {
   const setTodo = async () => {
     try {
       const res = await instance.get("todo/");
-      console.log(res);
       dispatch(getTodo(res.data));
     } catch (err) {
       console.log(err);
